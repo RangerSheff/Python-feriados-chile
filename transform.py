@@ -6,12 +6,13 @@ from datetime import datetime
 def fetch_feriados(year: int):
     url = f"https://apis.digital.gob.cl/fl/feriados/{year}"
     headers = {
-        "User-Agent": "python-http-client",
         "Accept": "application/json",
-        "Connection": "keep-alive"
+        "Connection": "keep-alive",
+        "Host": "apis.digital.gob.cl",
+        "User-Agent": "Mozilla/5.0"
     }
     try:
-        response = requests.get(url, headers=headers, allow_redirects=True, verify=False)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         feriados = response.json()
         logging.info(f"Feriados obtenidos: {len(feriados)} para el año {year}")
