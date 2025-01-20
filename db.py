@@ -1,6 +1,7 @@
 import sqlite3
 import logging
 from fastapi import HTTPException
+from models import Feriado
 
 # Función para almacenar los datos en la base de datos
 def almacenar_feriados(datos):
@@ -70,13 +71,15 @@ def obtener_feriado(fecha: str):
         resultado = cursor.fetchone()
 
         if resultado:
-            return {
-                "nombreFeriado": resultado[0],
-                "fecha": resultado[1],
-                "tipo": resultado[2],
-                "descripcion": resultado[3],
-                "dia_semana": resultado[4]
-            }
+            # Asignamos "" si no hay valor para descripcion
+            descripcion = resultado[3] if resultado[3] else ""
+            return Feriado(
+                nombreFeriado=resultado[0],
+                fecha=resultado[1],
+                tipo=resultado[2],
+                descripcion=descripcion,
+                dia_semana=resultado[4]
+            )
         else:
             raise HTTPException(status_code=404, detail="Feriado no encontrado")
     except sqlite3.Error as e:
